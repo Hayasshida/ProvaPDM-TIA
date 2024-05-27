@@ -9,29 +9,36 @@ import userIcon from "../../../assets/user-icon.jpg";
 import { useState } from 'react';
 import sad from "../../../assets/sad.png"
 import Post from '../../components/Post';
-import toxicityTest from '../../IA/methods/toxicity';
+import { toxicityTest } from '../../IA/methods/toxicity';
 
 export default function Feed({ navigation }) {
 
-  const loadToxicityModel = async (post) => {
-    const response = await toxicityTest(post);
-
-    const negativeMatches = [];
-
-    for(let i = 0; i < response; i++)
-
-  };
-
-  const [viewPost, setViewPost] = useState([{
+  let [postInfo, setPostInfo] = useState([{
     icon: null,
     ownerPost: null,
     post: null,
   }]);
 
+  const [ contentPost, setContentPost ] = useState("");
+
+  const tryPublish = async (posts) => {
+    const response = await toxicityTest(posts);
+
+    if(response[0] === undefined){
+      setPostInfo(postInfo[postInfo.length] = {
+        icon: userIcon,
+        ownerPost: "@bagre",
+        post: posts
+      })
+    }
+
+    console.log(response);
+  };
+
     return(
       
         <SafeAreaView style={styles.container}>
-          {viewPost[0] === undefined ? 
+          {postInfo[0] === undefined ? 
             <View style={styles.nothing}>
               <Image source={sad} style={{width: 64, height: 64, marginBottom: 12 }}/>
               <Text style={{color: "white", fontSize: 22,}}children="Nothing here yet"/>
@@ -39,7 +46,7 @@ export default function Feed({ navigation }) {
           :
             <View style={styles.renderFlat}>
               <FlatList
-                data={viewPost}
+                data={postInfo}
                 renderItem={({item}) => <Post icon={item.icon} ownerPost={item.ownerPost} post={item.post}/>}
               />
             </View>
@@ -53,9 +60,9 @@ export default function Feed({ navigation }) {
                 <Text children="@bagre" style={{color: "white", fontSize: 22}}/>
               </View>
 
-              <TextInput style={{backgroundColor: "transparent", width: Dimensions.width*0.8, fontSize: 22}} placeholder="Make your post" textColor="white"/>
+              <TextInput style={{backgroundColor: "transparent", width: Dimensions.width*0.8, fontSize: 22}} placeholder="Make your post" value={contentPost} onChangeText={setContentPost} textColor="white"/>
 
-              <Button onPress={() => (setViewPost([{icon: userIcon, ownerPost: "cqa", post: "cu"}]))} mode="contained" buttonColor="#99272d" textColor="white" style={{width: Dimensions.width*0.6, alignItems: "center", justifyContent: "center", padding: 0, margin: 0}}>
+              <Button onPress={() => tryPublish(contentPost)} mode="contained" buttonColor="#99272d" textColor="white" style={{width: Dimensions.width*0.6, alignItems: "center", justifyContent: "center", padding: 0, margin: 0}}>
                 <Text style={{color: "white", fontSize: 20}}>Publish</Text>  
               </Button>
             </View>

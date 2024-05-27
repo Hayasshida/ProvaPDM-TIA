@@ -10,10 +10,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <PaperProvider>
-      <Stack.Navigator initialRouteName="Feed" screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Feed" component={Feed}/>
-        <Stack.Screen name="Publish" component={Publish}/>
-      </Stack.Navigator>
+        <Stack.Navigator initialRouteName="Feed" screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Feed" component={Feed}/>
+          <Stack.Screen name="Publish" component={Publish}/>
+        </Stack.Navigator>
       </PaperProvider>
     </NavigationContainer>
   );
